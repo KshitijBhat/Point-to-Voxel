@@ -3,43 +3,44 @@
 # @file: segmentator_3d_asymm_spconv.py
 
 import numpy as np
+from spconv.pytorch.conv import SubMConv3d
 import spconv
 import torch
 from torch import nn
 
 
 def conv3x3(in_planes, out_planes, stride=1, indice_key=None):
-    return spconv.pytorch.conv.SubMConv3d(in_planes, out_planes, kernel_size=3, stride=stride,
+    return SubMConv3d(in_planes, out_planes, kernel_size=3, stride=stride,
                              padding=1, bias=False, indice_key=indice_key)
 
 
 def conv1x3(in_planes, out_planes, stride=1, indice_key=None):
-    return spconv.pytorch.conv.SubMConv3d(in_planes, out_planes, kernel_size=(1, 3, 3), stride=stride,
+    return SubMConv3d(in_planes, out_planes, kernel_size=(1, 3, 3), stride=stride,
                              padding=(0, 1, 1), bias=False, indice_key=indice_key)
 
 
 def conv1x1x3(in_planes, out_planes, stride=1, indice_key=None):
-    return spconv.pytorch.conv.SubMConv3d(in_planes, out_planes, kernel_size=(1, 1, 3), stride=stride,
+    return SubMConv3d(in_planes, out_planes, kernel_size=(1, 1, 3), stride=stride,
                              padding=(0, 0, 1), bias=False, indice_key=indice_key)
 
 
 def conv1x3x1(in_planes, out_planes, stride=1, indice_key=None):
-    return spconv.pytorch.conv.SubMConv3d(in_planes, out_planes, kernel_size=(1, 3, 1), stride=stride,
+    return SubMConv3d(in_planes, out_planes, kernel_size=(1, 3, 1), stride=stride,
                              padding=(0, 1, 0), bias=False, indice_key=indice_key)
 
 
 def conv3x1x1(in_planes, out_planes, stride=1, indice_key=None):
-    return spconv.pytorch.conv.SubMConv3d(in_planes, out_planes, kernel_size=(3, 1, 1), stride=stride,
+    return SubMConv3d(in_planes, out_planes, kernel_size=(3, 1, 1), stride=stride,
                              padding=(1, 0, 0), bias=False, indice_key=indice_key)
 
 
 def conv3x1(in_planes, out_planes, stride=1, indice_key=None):
-    return spconv.pytorch.conv.SubMConv3d(in_planes, out_planes, kernel_size=(3, 1, 3), stride=stride,
+    return SubMConv3d(in_planes, out_planes, kernel_size=(3, 1, 3), stride=stride,
                              padding=(1, 0, 1), bias=False, indice_key=indice_key)
 
 
 def conv1x1(in_planes, out_planes, stride=1, indice_key=None):
-    return spconv.pytorch.conv.SubMConv3d(in_planes, out_planes, kernel_size=1, stride=stride,
+    return SubMConv3d(in_planes, out_planes, kernel_size=1, stride=stride,
                              padding=1, bias=False, indice_key=indice_key)
 
 
@@ -277,7 +278,7 @@ class Asymm_3d_spconv(nn.Module):
 
         self.ReconNet = ReconBlock(2 * init_size, 2 * init_size, indice_key="recon")
 
-        self.logits = spconv.pytorch.conv.SubMConv3d(4 * init_size, nclasses, indice_key="logit", kernel_size=3, stride=1, padding=1,
+        self.logits = SubMConv3d(4 * init_size, nclasses, indice_key="logit", kernel_size=3, stride=1, padding=1,
                                         bias=True)
 
     def forward(self, voxel_features, coors, batch_size):
