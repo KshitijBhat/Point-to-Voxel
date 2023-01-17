@@ -3,7 +3,7 @@
 # @file: segmentator_3d_asymm_spconv.py
 
 import numpy as np
-from spconv.pytorch.conv import SubMConv3d
+from spconv.pytorch.conv import SubMConv3d, SparseConv3d, SparseInverseConv3d, SparseConvTensor
 import spconv
 import torch
 from torch import nn
@@ -117,10 +117,10 @@ class ResBlock(nn.Module):
 
         if pooling:
             if height_pooling:
-                self.pool = spconv.SparseConv3d(out_filters, out_filters, kernel_size=3, stride=2,
+                self.pool = SparseConv3d(out_filters, out_filters, kernel_size=3, stride=2,
                                                 padding=1, indice_key=indice_key, bias=False)
             else:
-                self.pool = spconv.SparseConv3d(out_filters, out_filters, kernel_size=3, stride=(2, 2, 1),
+                self.pool = SparseConv3d(out_filters, out_filters, kernel_size=3, stride=(2, 2, 1),
                                                 padding=1, indice_key=indice_key, bias=False)
         self.weight_initialization()
 
@@ -177,7 +177,7 @@ class UpBlock(nn.Module):
         self.bn3 = nn.BatchNorm1d(out_filters)
         # self.dropout3 = nn.Dropout3d(p=dropout_rate)
 
-        self.up_subm = spconv.SparseInverseConv3d(out_filters, out_filters, kernel_size=3, indice_key=up_key,
+        self.up_subm = SparseInverseConv3d(out_filters, out_filters, kernel_size=3, indice_key=up_key,
                                                   bias=False)
 
         self.weight_initialization()
@@ -286,7 +286,7 @@ class Asymm_3d_spconv(nn.Module):
         coors = coors.int()
         # import pdb
         # pdb.set_trace()
-        ret = spconv.SparseConvTensor(voxel_features, coors, self.sparse_shape,
+        ret = SparseConvTensor(voxel_features, coors, self.sparse_shape,
                                       batch_size)
         ret = self.downCntx(ret)
         down1c, down1b = self.resBlock2(ret)
