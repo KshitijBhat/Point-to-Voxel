@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # author: Xinge
 # @file: segmentator_3d_asymm_spconv.py
-# https://github.com/xinge008/Cylinder3D/issues/107#issuecomment-1025022381
+# Thanks - https://github.com/xinge008/Cylinder3D/issues/107#issuecomment-1025022381
 
 import numpy as np
 #import spconv
