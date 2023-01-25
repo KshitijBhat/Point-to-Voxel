@@ -302,6 +302,7 @@ class Asymm_3d_spconv(nn.Module):
         down4c, down4b = self.resBlock5(down3c)
 
         up4e = self.upBlock0(down4c, down4b)
+        hidden4e = up4e
         up3e = self.upBlock1(up4e, down3b)
         up2e = self.upBlock2(up3e, down2b)
         up1e = self.upBlock3(up2e, down1b)
@@ -312,4 +313,4 @@ class Asymm_3d_spconv(nn.Module):
 
         logits = self.logits(up0e)
         y = logits.dense()
-        return y
+        return y, hidden4e
