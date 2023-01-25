@@ -94,7 +94,6 @@ def main(args):
                         val_label_tensor = val_vox_label.type(torch.LongTensor).to(pytorch_device)
 
                         predict_labels, hidden4e = my_model(val_pt_fea_ten, val_grid_ten, val_label_tensor.shape[0])#val_batch_size)
-                        print(f"Hidden 4e: {hidden4e.features.shape}")
                         # aux_loss = loss_fun(aux_outputs, point_label_tensor)
                         loss = lovasz_softmax(torch.nn.functional.softmax(predict_labels).detach(), val_label_tensor,
                                               ignore=0) + loss_func(predict_labels.detach(), val_label_tensor)
@@ -130,7 +129,9 @@ def main(args):
             point_label_tensor = train_vox_label.type(torch.LongTensor).to(pytorch_device)
 
             # forward + backward + optimize
-            outputs = my_model(train_pt_fea_ten, train_vox_ten, point_label_tensor.shape[0] )#train_batch_size)
+            outputs, hidden4e = my_model(train_pt_fea_ten, train_vox_ten, point_label_tensor.shape[0] )#train_batch_size)
+            print(f"Hidden 4e: {hidden4e.features.shape}")
+
             loss = lovasz_softmax(torch.nn.functional.softmax(outputs), point_label_tensor, ignore=0) + loss_func(
                 outputs, point_label_tensor)
             loss.backward()
