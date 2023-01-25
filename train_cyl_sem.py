@@ -18,10 +18,26 @@ from builder import data_builder, model_builder, loss_builder
 from config.config import load_config_data
 
 from utils.load_save_util import load_checkpoint
+from topologylayer.functional.levelset_dionysus import Diagramlayer as DiagramlayerToplevel
+from topologylayer.functional.utils_dionysus import top_cost, top_batch_cost
 
 import warnings
 
 warnings.filterwarnings("ignore")
+
+#####################
+# Topology Layer
+width, height = 8,8
+axis_x = np.arange(0, width)
+axis_y = np.arange(0, height)
+grid_axes = np.array(np.meshgrid(axis_x, axis_y))
+grid_axes = np.transpose(grid_axes, (1, 2, 0))
+from scipy.spatial import Delaunay
+tri = Delaunay(grid_axes.reshape([-1, 2]))
+faces = tri.simplices.copy()
+F = DiagramlayerToplevel().init_filtration(faces)
+diagramlayerToplevel = DiagramlayerToplevel.apply
+
 
 
 def main(args):
@@ -130,10 +146,13 @@ def main(args):
 
             # forward + backward + optimize
             outputs, hidden4e = my_model(train_pt_fea_ten, train_vox_ten, point_label_tensor.shape[0] )#train_batch_size)
-            print(f"Hidden 4e: {hidden4e.features.shape}")
 
             loss = lovasz_softmax(torch.nn.functional.softmax(outputs), point_label_tensor, ignore=0) + loss_func(
                 outputs, point_label_tensor)
+            
+            top_loss_hidden4e = top_batch_cost(hidden4e.detach().cpu(), diagramlayerToplevel, F)
+            loss += top_loss_hidden4e
+
             loss.backward()
             optimizer.step()
             loss_list.append(loss.item())
