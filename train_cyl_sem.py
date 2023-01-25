@@ -38,6 +38,8 @@ faces = tri.simplices.copy()
 F = DiagramlayerToplevel().init_filtration(faces)
 diagramlayerToplevel = DiagramlayerToplevel.apply
 
+print(f"[INFO] Diagram layer applied")
+
 
 
 def main(args):
