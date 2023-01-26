@@ -153,7 +153,7 @@ def main(args):
             loss = lovasz_softmax(torch.nn.functional.softmax(outputs), point_label_tensor, ignore=0) + loss_func(
                 outputs, point_label_tensor)
             
-            top_loss_hidden4e = top_batch_cost(hidden4e.detach().cpu(), diagramlayerToplevel, F)
+            top_loss_hidden4e = top_batch_cost(hidden4e.features.detach().cpu(), diagramlayerToplevel, F)
             loss += top_loss_hidden4e
 
             loss.backward()
