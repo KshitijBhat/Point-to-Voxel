@@ -60,8 +60,8 @@ val_data_loader:
 ###################
 ## Train params
 train_params:
-  model_load_path: "./model_dir/model_full_ft.pt"
-  model_save_path: "./model_dir/model_tmp.pt"
+  model_load_path: "/content/Point-to-Voxel/model_dir/model_full_ft.pt"
+  model_save_path: "/content/Point-to-Voxel/model_dir/model_tmp.pt"
   checkpoint_every_n_steps: 4599
   max_num_epochs: 20 #40
   eval_every_n_steps: 5000 #4599

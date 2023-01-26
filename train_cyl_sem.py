@@ -135,6 +135,7 @@ def main(args):
                 if best_val_miou < val_miou:
                     best_val_miou = val_miou
                     torch.save(my_model.state_dict(), model_save_path)
+                    print("Saved model")
 
                 print('Current val miou is %.3f while the best val miou is %.3f' %
                       (val_miou, best_val_miou))
