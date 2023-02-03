@@ -41,7 +41,7 @@ dataset_params:
 ###################
 ## Data_loader options
 train_data_loader:
-  data_path: "/content/drive/MyDrive/lidar_vedang/tinydataset2/dataset/sequences/"
+  data_path: "/content/dataset/sequences/"
   imageset: "train"
   return_ref: True
   batch_size: 2
@@ -49,8 +49,8 @@ train_data_loader:
   num_workers: 4
 
 val_data_loader:
-  data_path: "/content/drive/MyDrive/lidar_vedang/tinydataset2/dataset/sequences/"
-  imageset: "test" #"val"
+  data_path: "/content/dataset/sequences/"
+  imageset: "val" #"val"
   return_ref: True
   batch_size: 1
   shuffle: False
@@ -60,9 +60,9 @@ val_data_loader:
 ###################
 ## Train params
 train_params:
-  model_load_path: "/content/Point-to-Voxel/model_dir/model_full_ft.pt"
-  model_save_path: "/content/Point-to-Voxel/model_dir/model_tmp.pt"
-  checkpoint_every_n_steps: 4599
+  model_load_path: "/content/model_full_ft.pt"
+  model_save_path: "/content/model_tmp.pt"
+  checkpoint_every_n_steps: 50
   max_num_epochs: 20 #40
-  eval_every_n_steps: 5000 #4599
+  eval_every_n_steps: 50 #4599
   learning_rate: 0.002 #1
