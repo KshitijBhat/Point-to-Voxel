@@ -37,9 +37,9 @@ tri = Delaunay(grid_axes.reshape([-1, 2]))
 faces = tri.simplices.copy()
 F = DiagramlayerToplevel().init_filtration(faces)
 diagramlayerToplevel = DiagramlayerToplevel.apply
-top_loss_coefficient = 1.0
+top_loss_coefficient = 0.02
 
-print(f"[INFO] Diagram layer applied")
+print(f"[INFO] Diagram layer applied, top_loss_coefficient: {top_loss_coefficient}")
 
 
 
