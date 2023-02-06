@@ -37,6 +37,7 @@ tri = Delaunay(grid_axes.reshape([-1, 2]))
 faces = tri.simplices.copy()
 F = DiagramlayerToplevel().init_filtration(faces)
 diagramlayerToplevel = DiagramlayerToplevel.apply
+top_loss_coefficient = 1.0
 
 print(f"[INFO] Diagram layer applied")
 
@@ -115,6 +116,10 @@ def main(args):
                         # aux_loss = loss_fun(aux_outputs, point_label_tensor)
                         loss = lovasz_softmax(torch.nn.functional.softmax(predict_labels).detach(), val_label_tensor,
                                               ignore=0) + loss_func(predict_labels.detach(), val_label_tensor)
+                        
+                        top_loss_hidden4c = top_batch_cost(hidden4e.features.detach().cpu(), diagramlayerToplevel, F)
+                        loss += top_loss_coefficient*top_loss_hidden4c
+
                         predict_labels = torch.argmax(predict_labels, dim=1)
                         predict_labels = predict_labels.cpu().detach().numpy()
                         for count, i_val_grid in enumerate(val_grid):
@@ -154,7 +159,7 @@ def main(args):
                 outputs, point_label_tensor)
             
             top_loss_hidden4c = top_batch_cost(hidden4e.features.detach().cpu(), diagramlayerToplevel, F)
-            loss += top_loss_hidden4c
+            loss += top_loss_coefficient*top_loss_hidden4c
 
             loss.backward()
             optimizer.step()
