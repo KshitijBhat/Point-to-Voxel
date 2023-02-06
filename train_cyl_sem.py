@@ -27,18 +27,9 @@ warnings.filterwarnings("ignore")
 
 #####################
 # Topology Layer
-width, height = 8,8
-axis_x = np.arange(0, width)
-axis_y = np.arange(0, height)
-grid_axes = np.array(np.meshgrid(axis_x, axis_y))
-grid_axes = np.transpose(grid_axes, (1, 2, 0))
-from scipy.spatial import Delaunay
-tri = Delaunay(grid_axes.reshape([-1, 2]))
-faces = tri.simplices.copy()
-F = DiagramlayerToplevel().init_filtration(faces)
-diagramlayerToplevel = DiagramlayerToplevel.apply
 
-print(f"[INFO] Diagram layer applied")
+
+print(f"[INFO] Alpha layer applied")
 
 
 
@@ -115,6 +106,10 @@ def main(args):
                         # aux_loss = loss_fun(aux_outputs, point_label_tensor)
                         loss = lovasz_softmax(torch.nn.functional.softmax(predict_labels).detach(), val_label_tensor,
                                               ignore=0) + loss_func(predict_labels.detach(), val_label_tensor)
+                        
+                        top_loss_hidden4c = top_batch_cost(hidden4e.features.detach().cpu(), diagramlayerToplevel, F)
+                        loss += top_loss_hidden4c
+                        
                         predict_labels = torch.argmax(predict_labels, dim=1)
                         predict_labels = predict_labels.cpu().detach().numpy()
                         for count, i_val_grid in enumerate(val_grid):
