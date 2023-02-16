@@ -27,7 +27,7 @@ warnings.filterwarnings("ignore")
 
 #####################
 # Topology Layer
-width, height = 8,8
+width, height = 16,16
 axis_x = np.arange(0, width)
 axis_y = np.arange(0, height)
 grid_axes = np.array(np.meshgrid(axis_x, axis_y))
@@ -37,7 +37,7 @@ tri = Delaunay(grid_axes.reshape([-1, 2]))
 faces = tri.simplices.copy()
 F = DiagramlayerToplevel().init_filtration(faces)
 diagramlayerToplevel = DiagramlayerToplevel.apply
-top_loss_coefficient = 0.1
+top_loss_coefficient = 1
 
 print(f"[INFO] Diagram layer applied, top_loss_coefficient: {top_loss_coefficient}")
 
