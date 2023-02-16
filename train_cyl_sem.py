@@ -39,7 +39,7 @@ F = DiagramlayerToplevel().init_filtration(faces)
 diagramlayerToplevel = DiagramlayerToplevel.apply
 top_loss_coefficient = 1
 
-print(f"[INFO] Diagram layer applied, top_loss_coefficient: {top_loss_coefficient}")
+print(f"[INFO] Diagram {(width, height)} layer applied, top_loss_coefficient: {top_loss_coefficient}")
 
 
 
