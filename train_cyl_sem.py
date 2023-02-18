@@ -18,8 +18,9 @@ from builder import data_builder, model_builder, loss_builder
 from config.config import load_config_data
 
 from utils.load_save_util import load_checkpoint
-from topologylayer.functional.levelset_dionysus import Diagramlayer as DiagramlayerToplevel
-from topologylayer.functional.utils_dionysus import top_cost, top_batch_cost
+# from topologylayer.functional.levelset_dionysus import Diagramlayer as DiagramlayerToplevel
+# from topologylayer.functional.utils_dionysus import top_cost, top_batch_cost
+from topologylayer.nn import AlphaLayer, BarcodePolyFeature
 
 import warnings
 
@@ -27,9 +28,19 @@ warnings.filterwarnings("ignore")
 
 #####################
 # Topology Layer
+layer = AlphaLayer(maxdim=1)
+dim = 0
+p = 1
+q = 6
+f1 = BarcodePolyFeature(dim, p, q)
+top_loss_coefficient = 1
+def alpha_topo_loss(x):
+    loss = top_loss_coefficient*f1(layer(x))
+    return loss
+
+print(f"[INFO] Alpha layer applied, top_loss_coefficient = {top_loss_coefficient}, barcode_params: dim,p,q = {dim, p, q}")
 
 
-print(f"[INFO] Alpha layer applied")
 
 
 
@@ -102,12 +113,12 @@ def main(args):
                         val_grid_ten = [torch.from_numpy(i).to(pytorch_device) for i in val_grid]
                         val_label_tensor = val_vox_label.type(torch.LongTensor).to(pytorch_device)
 
-                        predict_labels, hidden4e = my_model(val_pt_fea_ten, val_grid_ten, val_label_tensor.shape[0])#val_batch_size)
+                        predict_labels, hidden4c = my_model(val_pt_fea_ten, val_grid_ten, val_label_tensor.shape[0])#val_batch_size)
                         # aux_loss = loss_fun(aux_outputs, point_label_tensor)
                         loss = lovasz_softmax(torch.nn.functional.softmax(predict_labels).detach(), val_label_tensor,
                                               ignore=0) + loss_func(predict_labels.detach(), val_label_tensor)
                         
-                        top_loss_hidden4c = top_batch_cost(hidden4e.features.detach().cpu(), diagramlayerToplevel, F)
+                        top_loss_hidden4c = alpha_topo_loss(hidden4c)
                         loss += top_loss_hidden4c
                         
                         predict_labels = torch.argmax(predict_labels, dim=1)
@@ -148,7 +159,7 @@ def main(args):
             loss = lovasz_softmax(torch.nn.functional.softmax(outputs), point_label_tensor, ignore=0) + loss_func(
                 outputs, point_label_tensor)
             
-            top_loss_hidden4c = top_batch_cost(hidden4e.features.detach().cpu(), diagramlayerToplevel, F)
+            top_loss_hidden4c = alpha_topo_loss(hidden4c)
             loss += top_loss_hidden4c
 
             loss.backward()
