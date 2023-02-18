@@ -35,7 +35,11 @@ q = 6
 f1 = BarcodePolyFeature(dim, p, q)
 top_loss_coefficient = 1
 def alpha_topo_loss(x):
-    loss = top_loss_coefficient*f1(layer(x))
+    loss = 0
+
+    for i in range(x.shape[0]):
+        loss += top_loss_coefficient*f1(layer(x[i].squeeze()))
+    loss /= x.shape[0]
     return loss
 
 print(f"[INFO] Alpha layer applied, top_loss_coefficient = {top_loss_coefficient}, barcode_params: dim,p,q = {dim, p, q}")
