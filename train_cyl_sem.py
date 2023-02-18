@@ -118,7 +118,7 @@ def main(args):
                         loss = lovasz_softmax(torch.nn.functional.softmax(predict_labels).detach(), val_label_tensor,
                                               ignore=0) + loss_func(predict_labels.detach(), val_label_tensor)
                         
-                        top_loss_hidden4c = alpha_topo_loss(hidden4c)
+                        top_loss_hidden4c = alpha_topo_loss(hidden4c.features.detach())
                         loss += top_loss_hidden4c
                         
                         predict_labels = torch.argmax(predict_labels, dim=1)
@@ -159,7 +159,7 @@ def main(args):
             loss = lovasz_softmax(torch.nn.functional.softmax(outputs), point_label_tensor, ignore=0) + loss_func(
                 outputs, point_label_tensor)
             
-            top_loss_hidden4c = alpha_topo_loss(hidden4c)
+            top_loss_hidden4c = alpha_topo_loss(hidden4c.features.detach())
             loss += top_loss_hidden4c
 
             loss.backward()
